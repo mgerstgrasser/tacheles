@@ -1,0 +1,51 @@
+.message-list {
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.message {
+  margin-bottom: 10px;
+}
+
+.user {
+  display: inline-block;
+  text-align: left;
+  margin-left: 10%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #e6f7ff;
+  width: 90%;
+}
+
+.assistant {
+  display: inline-block;
+  text-align: left;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #e6fff7;
+  width: 90%;
+}
+
+.code-block {
+  position: relative;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+  line-height: 2;
+}
+
+.copy-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #ffffff;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.copy-button:hover {
+  background-color: #f0f0f0;
+}

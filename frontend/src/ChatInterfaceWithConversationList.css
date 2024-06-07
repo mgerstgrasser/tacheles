@@ -1,0 +1,54 @@
+.chat-interface-with-conversation-list {
+  display: flex;
+  height: 100vh;
+}
+
+.conversation-list {
+  background-color: white;
+  height: 100%;
+}
+
+.conversation-list .ant-layout-sider {
+  background-color: #f0f2f5;
+}
+
+.conversation-list .ant-menu {
+  border-right: none;
+  background-color: #f0f2f5;
+}
+
+.conversation-list .ant-menu-item {
+  padding: 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.conversation-list .ant-menu-item:hover {
+  background-color: #e6f7ff;
+}
+
+.conversation-list .ant-menu-item-selected {
+  background-color: #1890ff !important;
+  color: white !important;
+}
+
+.conversation-list .ant-menu-item-selected::after {
+  display: none;
+}
+
+.chat-interface-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.error-alert {
+  margin-bottom: 20px;
+}

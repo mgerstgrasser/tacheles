@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "name": "Python: Debug tacheles backend",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": { "host": "localhost", "port": 5678 },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/backend",
+          "remoteRoot": "/app"
+        }
+      ],
+      "justMyCode": true
+    },
+    {
+      "name": "Python: Debug tacheles inference engine",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": { "host": "localhost", "port": 5679 },
+      "justMyCode": false
+    }
+  ]
+}

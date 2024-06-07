@@ -1,0 +1,86 @@
+version: "3"
+services:
+  # # Using vllm
+  # inference:
+  #   image: vllm/vllm-openai:latest
+  #   # build:
+  #   #   context: ./inference
+  #   #   dockerfile: Dockerfile.vllm
+  #   ports:
+  #     - "8000:8000"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids: [ '0' ]
+  #             # count: 1
+  #             capabilities: [ gpu ]
+  #   volumes:
+  #     - ~/.cache/huggingface:/root/.cache/huggingface
+  #     # Uncomment to use local model by mounting it inside the container
+  #     # - ${MODELPATH}:/model
+  #   environment:
+  #     - HF_TOKEN=${HF_TOKEN}
+  #     - MODEL=${MODEL}
+  #   command: --model=${MODEL} --port=8000 --tensor-parallel-size=${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}
+  #   shm_size: '2gb'
+
+  # Using sglang:
+  inference:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile.sglang
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              # Alternatively specify specific GPU device IDs
+              # device_ids: [ '2' ]
+              capabilities: [gpu]
+    # In case you want to persist the HF cache, uncomment the following line.
+    # volumes:
+    #   - ~/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - MODEL=${MODEL}
+    shm_size: "2gb"
+
+  backend:
+    build:
+      context: ./backend
+      # We need to give an additional context here so the
+      # backend can build the frontend code for static serving.
+      additional_contexts:
+        - frontend=./frontend
+    environment:
+      INFERENCE_API_URI: http://inference:8000/v1
+      MODEL: ${MODEL}
+      # Change here if you use an external database.
+      DATABASE_URL: mysql+pymysql://myuser:mypassword@db/mydb
+    ports:
+      - "80:8001"
+    # The following is important - if the backend starts before the DB
+    # is ready, it can crash immediately.
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:latest
+    environment:
+      # You'll want to change these values in production.
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    volumes:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10

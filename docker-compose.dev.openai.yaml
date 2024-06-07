@@ -1,0 +1,27 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      MODEL: ${MODEL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8001:8001"
+      - "5678:5678"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8001

@@ -1,0 +1,41 @@
+name: Lint, Format, and Test Backend
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+        working-directory: backend/
+
+      - name: Run Black formatter
+        run: black --check .
+        working-directory: backend/
+
+      - name: Run Flake8 linter
+        run: flake8 .
+        working-directory: backend/
+
+      - name: Run isort
+        run: isort --check --diff .
+        working-directory: backend/
+
+      - name: Run tests
+        run: pytest
+        working-directory: backend/

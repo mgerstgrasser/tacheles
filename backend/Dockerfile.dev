@@ -1,0 +1,23 @@
+# Use a base image with Python installed
+FROM python:3.12
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the tacheles_backend directory into the container
+COPY . /app
+
+# Install the required dependencies
+COPY requirements.txt /app
+RUN pip install -r requirements.txt
+
+RUN pip install debugpy
+
+# Expose the port
+EXPOSE 8001
+
+# Create volume for /database
+VOLUME /database
+
+# Set the command to run the FastAPI app
+CMD ["python", "-m", "debugpy", "--listen", "0.0.0.0:5678", "-m", "uvicorn", "tacheles_backend.tacheles_backend:app", "--host", "0.0.0.0", "--port", "8001", "--reload", "--reload-dir", "/app/tacheles_backend", "--log-level", "debug"]

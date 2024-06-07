@@ -1,0 +1,24 @@
+FROM node:14-alpine
+WORKDIR /app
+
+RUN apk add --no-cache git \
+    && git clone https://github.com/polly3d/mockai.git /app
+
+RUN npm install
+
+# We copy our own mock responses into the container,
+# mainly so we can use them in the end-to-end tests.
+COPY mock_contents.txt /app/data/contents.txt
+
+# Set environment variables
+ENV SERVER_PORT=8000
+ENV MOCK_TYPE=random
+ENV MOCK_FILE_PATH=data/contents.txt
+ENV MOCK_FILE_SEPERATER="@@@@"
+
+# Expose the server port
+EXPOSE $SERVER_PORT
+
+# Start the server
+CMD ["npm", "start"]
+

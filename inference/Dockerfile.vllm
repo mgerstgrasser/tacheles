@@ -1,0 +1,18 @@
+FROM vllm/vllm-openai:latest
+
+# Instead could start from pytorch image if we wanted to customize the vllm installation
+# FROM nvcr.io/nvidia/pytorch:24.02-py3
+# RUN pip install vllm 
+
+
+EXPOSE 8000
+
+# Instead of using a HF model, we could use a local model by copying it into the container
+# COPY ${MODEL} /model
+# ENTRYPOINT "python -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --model /model --tensor-parallel-size ${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}"
+
+# If we do use HF, we could also persist the HF cache in a volume, rather than mounting the HF cache from the host
+# VOLUME /hf_cache
+# ENV HF_HOME=/hf_cache
+
+ENTRYPOINT "python -m vllm.entrypoints.openai.api_server --host 0.0.0.0 --model ${MODEL} --tensor-parallel-size ${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}"

@@ -1,0 +1,93 @@
+version: "3"
+services:
+  # # Using vllm
+  # inference:
+  #   image: vllm/vllm-openai:latest
+  #   # build:
+  #   #   context: ./inference
+  #   #   dockerfile: Dockerfile.vllm
+  #   ports:
+  #     - "8000:8000"
+  #     # - "5679:5679"
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             device_ids: [ '0' ]
+  #             # count: 1
+  #             capabilities: [ gpu ]
+  #   volumes:
+  #     - ~/.cache/huggingface:/root/.cache/huggingface
+  #     # Uncomment to use local model by mounting it inside the container
+  #     # - ${MODELPATH}:/model
+  #   environment:
+  #     - HF_TOKEN=${HF_TOKEN}
+  #     - MODEL=${MODEL}
+  #   # entrypoint:
+  #   #   [
+  #   #     "sh",
+  #   #     "-c",
+  #   #     "pip install debugpy -t /tmp && python3 /tmp/debugpy --listen 0.0.0.0:5679 -m vllm.entrypoints.openai.api_server --model=${MODEL} --port=8000 --tensor-parallel-size=${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}"
+  #   #   ]
+  #   command: --model=${MODEL} --port=8000 --tensor-parallel-size=${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}
+  #   shm_size: '2gb'
+
+  # Using sglang:
+  inference:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile.sglang
+    ports:
+      - "8000:8000"
+      - "5679:5679"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              # Alternatively specify specific GPU device IDs
+              # device_ids: [ '2' ]
+              capabilities: [gpu]
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+      # Uncomment to use local model by mounting it inside the container
+      # - ${MODELPATH}:/model
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - MODEL=${MODEL}
+    # entrypoint:
+    #   [
+    #     "sh",
+    #     "-c",
+    #     "pip install debugpy -t /tmp && python3 /tmp/debugpy --listen 0.0.0.0:5679 -m sglang.launch_server --port 8000 --host 0.0.0.0 --model-path ${MODEL} --tp ${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}",
+    #   ]
+    # command: --model=${MODEL} --port=8000 --tensor-parallel-size=${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}
+    shm_size: "2gb"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      INFERENCE_API_URI: http://inference:8000/v1
+      MODEL: ${MODEL}
+    ports:
+      - "8001:8001"
+      - "5678:5678"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      - backend
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8001

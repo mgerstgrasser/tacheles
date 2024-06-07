@@ -1,0 +1,30 @@
+.userinput {
+  margin: 20px;
+  bottom: 0;
+  right: 0;
+  text-align: right;
+}
+
+.userinput Button {
+  margin: 5px;
+}
+
+.userinput-textfield {
+  margin-left: 10%;
+  width: 90%;
+  min-height: 80px;
+  /* border-radius: 5px;
+    border: 1px solid #ccc; */
+  padding: 5px;
+}
+
+.reset-conversation {
+  max-width: 800px;
+  text-align: right;
+  bottom: 0;
+  right: 0;
+}
+
+.reset-conversation Button {
+  margin: 20px;
+}

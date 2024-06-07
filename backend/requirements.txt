@@ -1,0 +1,9 @@
+fastapi
+httpx
+uvicorn
+openai
+PyYAML
+sqlmodel
+pymysql
+cryptography
+itsdangerous

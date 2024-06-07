@@ -1,0 +1,25 @@
+This is tacheles, a blueprint for LLM chat applications.
+It implements all the basics of a modern LLM UI, including all the tedious bits like:
+* Streaming Responses
+* Error Handling
+* **Markdown** *Formatting*, including copy-pasteable codeblocks
+```py
+def features():
+    return copy_pasting_code()
+```
+* Complete Unit, Integration and End-To-End Testing
+* Deployment Strategies 
+and many more.
+@@@@
+This is tacheles, a blueprint for LLM chat applications.
+It implements all the basics of a modern LLM UI, including all the tedious bits like:
+* Streaming Responses
+* Error Handling
+* **Markdown** *Formatting*, including copy-pasteable codeblocks
+```py
+def features():
+    return copy_pasting_code()
+```
+* Complete Unit, Integration and End-To-End Testing
+* Deployment Strategies 
+and many more.

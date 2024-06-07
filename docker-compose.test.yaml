@@ -1,0 +1,40 @@
+version: "3"
+# This file is used for running end-to-end tests on github.
+services:
+  inference:
+    build:
+      context: ./inference
+      dockerfile: Dockerfile.mock
+    network_mode: host
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    environment:
+      INFERENCE_API_URI: http://localhost:8000/v1
+      MODEL: ${MODEL}
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - inference
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    network_mode: host
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+    depends_on:
+      backend:
+        condition: service_healthy
+    network_mode: host
+    environment:
+      REACT_APP_BACKEND_URL: http://localhost:8001
+    command: ["npm", "run", "test:e2e"]

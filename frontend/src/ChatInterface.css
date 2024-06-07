@@ -1,0 +1,22 @@
+.chat-interface {
+  max-width: 800px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.chat-interface .message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+.chat-interface .userinput {
+  padding: 20px;
+  /* border-top: 1px solid #d9d9d9; */
+}

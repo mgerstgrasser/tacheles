@@ -1,0 +1,6 @@
+FROM nvcr.io/nvidia/pytorch:24.02-py3
+RUN pip install "sglang[srt]"
+
+EXPOSE 8000
+
+ENTRYPOINT python -m sglang.launch_server --port 8000 --host 0.0.0.0 --model-path ${MODEL} --tp ${NUM_GPUS:-1} ${EXTRA_INFERENCE_ARGS:-}

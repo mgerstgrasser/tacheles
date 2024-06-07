@@ -1,0 +1,24 @@
+name: End-to-End Tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build and run containers
+        run: docker-compose -f docker-compose.test.yaml up --build --abort-on-container-exit
+
+      - name: Check frontend exit code
+        run: |
+          FRONTEND_EXIT_CODE=$(docker-compose -f docker-compose.test.yaml ps -q frontend | xargs docker inspect -f '{{ .State.ExitCode }}')
+          if [ $FRONTEND_EXIT_CODE -ne 0 ]; then
+            echo "Frontend container exited with code $FRONTEND_EXIT_CODE"
+            exit 1
+          fi

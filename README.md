@@ -45,9 +45,9 @@ To get started with tacheles, follow these steps:
 
 1. Clone the repository: `git clone https://github.com/mgerstgrasser/tacheles.git`
 2. Navigate to the project directory: `cd tacheles`
-   a. If you have a GPU and want to run local inference, run `MODEL=username/model HF_TOKEN=your_token docker-compose -f docker-compose.dev.yaml up --build`.
-   a. If you have money and want to run inference through OpenAI, run `MODEL=gpt-3.5-turbo OPENAI_API_KEY=sk-... docker-compose -f docker-compose.dev.openai.yaml up --build`.
-   a. If you have neither and want to just develop without a real LLM, run `docker-compose -f docker-compose.dev.mock.yaml up --build`.
+   - If you have a GPU and want to run local inference, run `MODEL=username/model HF_TOKEN=your_token docker-compose -f docker-compose.dev.yaml up --build`.
+   - If you have money and want to run inference through OpenAI, run `MODEL=gpt-3.5-turbo OPENAI_API_KEY=sk-... docker-compose -f docker-compose.dev.openai.yaml up --build`.
+   - If you have neither and want to just develop without a real LLM, run `docker-compose -f docker-compose.dev.mock.yaml up --build`.
 3. Open your browser and visit `http://localhost:3000` to access the chat interface.
 
 Then, head over to the [documentation](DOCUMENTATION.md) for more detailed information on usage, architecture, development, debugging, and production deployment.
